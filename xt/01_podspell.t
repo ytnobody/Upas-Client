@@ -5,6 +5,6 @@ add_stopwords(map { split /[\s\:\-]/ } <DATA>);
 $ENV{LANG} = 'C';
 all_pod_files_spelling_ok('lib');
 __DATA__
-ytnobody
+satoshi azuma
 ytnobody@gmail.com
 Upas::Client
