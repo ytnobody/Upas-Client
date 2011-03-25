@@ -11,18 +11,24 @@ sub new {
 
 sub set {
     my ( $self, @opts ) = @_;
-    my $overwrite = @opts % 2 ? 0 : 1;
-    pop @opts if $overwrite;
+    my $ow = 0;
+    $ow = 1 if @opts % 2 > 0;
+    pop @opts if $ow;
     my %records = ( @opts ); 
     my $client = $self->{ client };
     my $key = my $data = undef;
+
     for $key ( keys %records ) {
         $data = $records{ $key };
         $data->{ key } = $key;
-        if () {
+        if ( $ow ) {
+            if ( defined $client->get( $self->{ name }.':key:'.$key ) ) {
+                $client->delete( $self->{ name }.':key:'.$key );
+            }
+            $client->set( $self->{ name }, freeze( $data ), $self->{ expire } );
         }
-        elsif ( ! defined $client->get( $self->{ name }.':key:'.$key ) {
-            $client->set( $self->{ name }, freeze $data, $self->{ expire } );
+        elsif ( ! defined $client->get( $self->{ name }.':key:'.$key ) ) {
+            $client->set( $self->{ name }, freeze( $data ), $self->{ expire } );
         }
         else {
             warn "Duplicate key \"$key\"";
@@ -43,9 +49,10 @@ sub lookup {
     for my $key ( @keys ) {
         $reclist = $client->get( $self->{ name }.':key:'.$key );
         next unless defined $reclist;
-        $reclist = thaw $reclist;
-        push @res, Upas::Client::Record->new( %{ $reclist->[0] }, _REALM => $realm );
+        $reclist = thaw( $reclist );
+        push @res, Upas::Client::Record->new( %{ $reclist->[0] }, _REALM => $self );
     }
+    return $res[0] if @res == 1;
     return @res;
 }
 
@@ -57,15 +64,15 @@ sub search {
     unless ( @cond ) {
         $reclist = $client->get( $self->{ name } );
         next unless defined $reclist;
-        $reclist = thaw $reclist;
-        push @res, map { Upas::Client::Record->new( realm => $self, data => $_ ) } @$reclist;
+        $reclist = thaw( $reclist );
+        push @res, map { Upas::Client::Record->new( _REALM => $self, %$_ ) } @$reclist;
     }
     else {
         my $search_opts = join ':', @cond;
         $reclist = $client->get( $self->{ name }.':'.$search_opts );
         next unless defined $reclist;
-        $reclist = thaw $reclist;
-        push @res, map { Upas::Client::Record->new( realm => $self, data => $_ ) } @$reclist;
+        $reclist = thaw( $reclist );
+        push @res, map { Upas::Client::Record->new( _REALM => $self, %$_ ) } @$reclist;
     }
     return @res;
 }

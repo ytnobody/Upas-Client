@@ -13,10 +13,10 @@ sub new {
 }
 
 sub realm {
-    my ( $self, $realm, $expire ) = @_;
+    my ( $self, $realm_name, $expire ) = @_;
     Upas::Client::Realm->new( 
-        name => $realm, 
-        expire => $exire, 
+        name => $realm_name, 
+        expire => $expire, 
         client => $self->{ client } 
     );
 }
