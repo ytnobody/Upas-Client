@@ -9,6 +9,8 @@ sub new {
     bless \%opts, $class;
 }
 
+sub get { shift->lookup( @_ ) || undef }
+
 sub set {
     my ( $self, @opts ) = @_;
     my $ow = 0;

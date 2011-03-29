@@ -4,9 +4,14 @@ use warnings;
 use strict;
 use parent qw/ Hash::AsObject /;
 use Upas::Client::Realm;
-use Acme::Damn;
+use Clone qw/ clone /;
+use Acme::Curse qw/ curse /;
 
-sub as_hash { %{ damn shift } }
+sub as_hash { 
+    my %hash = %{ curse shift };
+    delete $hash{ _REALM };
+    return %hash;
+}
 
 sub realm { shift->{ _REALM } }
 
