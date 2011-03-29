@@ -7,7 +7,6 @@ requires 'Cache::Memcached::Fast';
 requires 'Storable';
 requires 'Acme::Curse';
 requires 'Hash::AsObject';
-requires 'Clone';
 
 tests 't/*.t';
 author_tests 'xt';

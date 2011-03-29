@@ -4,7 +4,6 @@ use warnings;
 use strict;
 use parent qw/ Hash::AsObject /;
 use Upas::Client::Realm;
-use Clone qw/ clone /;
 use Acme::Curse qw/ curse /;
 
 sub as_hash { 
