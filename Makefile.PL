@@ -14,6 +14,7 @@ author_tests 'xt';
 test_requires 'Test::More';
 test_requires 'Test::TCP';
 test_requires 'Test::Deep';
+test_requires 'Test::Warn';
 test_requires 'Upas';
 
 auto_set_repository;

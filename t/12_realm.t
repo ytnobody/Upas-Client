@@ -1,6 +1,7 @@
 use strict;
 use Test::More;
 use Test::TCP;
+use Test::Warn;
 use Upas::Client;
 use Upas;
 use Data::Dumper;
@@ -19,16 +20,14 @@ is $realm->{ name }, 'test';
 is $realm->{ expire }, 600;
 can_ok $realm, qw/ set overwrite lookup search delete /;
 
-eval { 
+warning_is { 
     $realm->set( 
         data1 => { name => 'testdata1', point => 400, tag => 'hige' },
         data2 => { name => 'testdata2', point => 500, tag => 'hoga' },
         data3 => { name => 'testdata3', point => 900, tag => 'puyo' },
         data4 => { name => 'testdata4', point => 700, tag => 'hoga' },
     );
-};
-
-is $@, '';
+} undef, 'Error when set some data';
 
 my @recs;
 push @recs, $realm->lookup( 'data1' );
